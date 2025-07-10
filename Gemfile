@@ -30,7 +30,7 @@ gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]
 gem "devise"
 gem "pundit"
 gem "rolify"
-gem "elasticsearch-model", "~> 7.0"
+gem "elasticsearch-model", "~> 8.0"
 gem "elasticsearch-rails", "~> 7.0"
 gem "image_processing", "~> 1.2"
 gem "stripe", "~> 5.0"
