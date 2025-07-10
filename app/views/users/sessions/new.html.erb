@@ -1,0 +1,38 @@
+<div class="container py-5" style="background-color: #f7fdf7; min-height: 100vh;">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow rounded-4 border-0">
+        <div class="card-body p-4">
+          <h2 class="text-center fw-bold mb-2" style="color: #2e7d32;">Almora</h2>
+          <p class="text-center text-muted mb-4">Login to your account</p>
+
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { method: :post }) do |f| %>
+            <%= devise_error_messages! %>
+
+            <div class="form-group mb-3">
+              <%= f.label :email, "Email", class: "form-label" %>
+              <%= f.email_field :email, autofocus: true, class: "form-control border-success" %>
+            </div>
+
+            <div class="form-group mb-3">
+              <%= f.label :password, "Password", class: "form-label" %>
+              <%= f.password_field :password, autocomplete: "current-password", class: "form-control border-success" %>
+            </div>
+
+            <div class="d-grid mb-3">
+              <%= f.submit "Login", class: "btn btn-success rounded-pill fw-semibold" %>
+            </div>
+          <% end %>
+
+          <div class="text-center mt-2">
+            <p class="text-muted">
+              Don't have an account?
+              <%= link_to "Sign up", new_registration_path(resource_name), class: "text-success fw-semibold" %>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

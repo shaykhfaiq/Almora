@@ -36,6 +36,7 @@ gem "image_processing", "~> 1.2"
 gem "stripe", "~> 5.0"
 gem "stripe-rails", "~> 1.0"
 gem "active_storage_validations", "~> 0.9.0"
+gem "bootstrap", "~> 5.3.1"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -66,3 +67,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "cssbundling-rails", "~> 1.4"
