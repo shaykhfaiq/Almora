@@ -16,6 +16,9 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+gem "bootstrap", "~> 5.3.1"
+gem "sassc-rails"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
@@ -36,7 +39,7 @@ gem "image_processing", "~> 1.2"
 gem "stripe", "~> 5.0"
 gem "stripe-rails", "~> 1.0"
 gem "active_storage_validations", "~> 0.9.0"
-gem "bootstrap", "~> 5.3.1"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
