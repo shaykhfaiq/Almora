@@ -1,0 +1,57 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-success fw-bold">Edit Category</h2>
+    <%= link_to "← Back to Categories", dashboard_seller_categories_path, class: "btn btn-outline-success" %>
+  </div>
+
+  <%= form_with model: [:dashboard, :seller, @category],class: "bg-white p-4 rounded shadow-sm", local: true do |f| %>
+    <% if @category.errors.any? %>
+      <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <ul>
+          <% @category.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= f.label :name, class: "form-label fw-semibold text-success" %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter category name" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :description, class: "form-label fw-semibold text-success" %>
+      <%= f.text_area :description, rows: 4, class: "form-control", placeholder: "Write a short description" %>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <%= f.submit "Update Category", class: "btn btn-success px-4" %>
+    </div>
+  <% end %>
+</div>
+
+
+<style>
+  .form-control:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 0.25rem rgba(34, 197, 94, 0.25);
+  }
+
+  .btn-success:hover {
+    background-color: #16a34a;
+    border-color: #15803d;
+  }
+
+  .btn-outline-success:hover {
+    background-color: #d1fae5;
+    color: #15803d;
+  }
+
+  .alert-danger {
+    border: 1px solid #dc2626;
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+</style>
