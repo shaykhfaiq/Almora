@@ -1,0 +1,98 @@
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-header bg-success text-white rounded-top-4">
+      <h3 class="mb-0">Edit Seller Profile</h3>
+    </div>
+    <div class="card-body p-4">
+      <%= form_with model: @seller_detail, url: dashboard_seller_seller_detail_path, method: :put, local: true, multipart: true, html: { data: { turbo: false } } do |f| %>
+
+        <%= f.fields_for :user, @user do |u| %>
+          <h5 class="text-success fw-bold">Account Information</h5>
+          <hr class="mb-3">
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <%= u.label :full_name, "Full Name", class: "form-label" %>
+              <%= u.text_field :full_name, class: "form-control border-success" %>
+            </div>
+            <div class="col-md-6">
+              <%= u.label :contact, "Contact", class: "form-label" %>
+              <%= u.text_field :contact, class: "form-control border-success" %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <%= u.label :country, "Country", class: "form-label" %>
+              <%= u.text_field :country, class: "form-control border-success" %>
+            </div>
+            <div class="col-md-4">
+              <%= u.label :city, "City", class: "form-label" %>
+              <%= u.text_field :city, class: "form-control border-success" %>
+            </div>
+            <div class="col-md-4">
+              <%= u.label :address, "Address", class: "form-label" %>
+              <%= u.text_field :address, class: "form-control border-success" %>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <%= u.label :display_picture, "Profile Picture", class: "form-label" %><br>
+            <% if @user.display_picture.attached? %>
+              <img id="image-preview" src="<%= url_for(@user.display_picture) %>" class="img-thumbnail mb-2" width="120" />
+            <% else %>
+              <img id="image-preview" src="https://via.placeholder.com/120x120?text=No+Image" class="img-thumbnail mb-2" width="120" />
+            <% end %>
+            <%= u.file_field :display_picture, accept: 'image/*', class: "form-control", onchange: "previewImage(event)" %>
+          </div>
+        <% end %>
+
+        <h5 class="text-success fw-bold mt-4">Store Information</h5>
+        <hr class="mb-3">
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <%= f.label :store_name, "Store Name", class: "form-label" %>
+            <%= f.text_field :store_name, class: "form-control border-success" %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :store_url, "Store URL", class: "form-label" %>
+            <%= f.text_field :store_url, class: "form-control border-success" %>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <%= f.label :business_email, "Business Email", class: "form-label" %>
+            <%= f.email_field :business_email, class: "form-control border-success" %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :ntn_number, "NTN Number", class: "form-label" %>
+            <%= f.text_field :ntn_number, class: "form-control border-success" %>
+          </div>
+        </div>
+
+        <div class="text-end mt-4">
+          <%= f.submit "Update Profile", class: "btn btn-success px-4 py-2" %>
+        </div>
+
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  function previewImage(event) {
+    const input = event.target;
+    const preview = document.getElementById("image-preview");
+    const file = input.files[0];
+
+    if (file) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = "block";
+    } else {
+      preview.src = "https://via.placeholder.com/120x120?text=No+Image";
+      preview.style.display = "block";
+    }
+  }
+</script>

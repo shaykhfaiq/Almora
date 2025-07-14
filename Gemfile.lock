@@ -92,6 +92,7 @@ GEM
     brakeman (7.0.2)
       racc
     builder (3.3.0)
+    byebug (12.0.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -375,6 +376,7 @@ DEPENDENCIES
   bootsnap
   bootstrap (~> 5.3.1)
   brakeman
+  byebug
   capybara
   cssbundling-rails (~> 1.4)
   debug
