@@ -1,0 +1,248 @@
+<div class="sidebar-container">
+  <div class="user-profile-section">
+    <div class="user-info">
+      <div class="user-details">
+        <img src="/placeholder-profile.jpg" class="sidebar-profile-pic" />
+
+        <div class="user-text">
+          <h6 class="user-name mb-0">
+            <a href="/dashboard/seller/seller_detail" class="text-decoration-none text-dark"><%=current_user.full_name%></a>
+          </h6>
+        </div>
+      </div>
+
+      <form class="button_to" method="post" action="/users/sign_out">
+        <input type="hidden" name="_method" value="delete" />
+        <button class="btn logout-btn" title="Logout" type="submit">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <h6 class="section-title">Analytics</h6>
+      <ul class="nav-list">
+        <li class="nav-item active">
+          <a href="/dashboard/seller" class="nav-link">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <h6 class="section-title">Store Management</h6>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="/dashboard/seller/products" class="nav-link">
+            <i class="fas fa-box"></i>
+            <span>Products</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/dashboard/seller/categories" class="nav-link">
+            <i class="fas fa-tags"></i>
+            <span>Categories</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Orders</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-chart-line"></i>
+            <span>Sales</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<style>
+.sidebar-container {
+  width: 280px;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.user-profile-section {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.sidebar-profile-pic {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #22c55e;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.user-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.logout-btn {
+  background: #22c55e;
+  border: none;
+  border-radius: 12px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+}
+
+.sidebar-nav {
+  padding: 20px 0;
+}
+
+.nav-section {
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 15px;
+  padding-left: 10px;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin-bottom: 5px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 15px;
+  color: #6b7280;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-link:hover {
+  background: #f0fdf4;
+  color: #22c55e;
+  text-decoration: none;
+  transform: translateX(5px);
+}
+
+.nav-item.active .nav-link {
+  background: #22c55e;
+  color: white;
+}
+
+.nav-item.active .nav-link::after {
+  content: '';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+
+.nav-link i {
+  font-size: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-link span {
+  font-size: 15px;
+}
+
+.badge {
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: auto;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .sidebar-container {
+    width: 100%;
+    height: auto;
+    position: relative;
+    box-shadow: none;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .user-info {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .logout-btn {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+  }
+}
+</style>

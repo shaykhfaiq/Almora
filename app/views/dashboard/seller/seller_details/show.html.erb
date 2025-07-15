@@ -1,0 +1,44 @@
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-header bg-success text-white rounded-top-4">
+      <h3 class="mb-0">Seller Profile</h3>
+    </div>
+
+    <div class="card-body p-4">
+      <div class="mb-4 text-center">
+        <% if @user.display_picture.attached? %>
+          <img src="<%= url_for(@user.display_picture) %>" alt="Profile Picture" class="img-thumbnail rounded-circle" width="120">
+        <% else %>
+          <img src="https://via.placeholder.com/120x120?text=No+Image" alt="No Profile Picture" class="img-thumbnail rounded-circle">
+        <% end %>
+      </div>
+
+      <h5 class="text-success fw-bold">Account Information</h5>
+      <hr class="mb-3">
+      <div class="row mb-3">
+        <div class="col-md-6"><strong>Full Name:</strong> <%= @user.full_name %></div>
+        <div class="col-md-6"><strong>Contact:</strong> <%= @user.contact %></div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Country:</strong> <%= @user.country %></div>
+        <div class="col-md-4"><strong>City:</strong> <%= @user.city %></div>
+        <div class="col-md-4"><strong>Address:</strong> <%= @user.address %></div>
+      </div>
+
+      <h5 class="text-success fw-bold mt-4">Store Information</h5>
+      <hr class="mb-3">
+      <div class="row mb-3">
+        <div class="col-md-6"><strong>Store Name:</strong> <%= @seller_detail.store_name %></div>
+        <div class="col-md-6"><strong>Store URL:</strong> <%= @seller_detail.store_url %></div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6"><strong>Business Email:</strong> <%= @seller_detail.business_email %></div>
+        <div class="col-md-6"><strong>NTN Number:</strong> <%= @seller_detail.ntn_number %></div>
+      </div>
+
+      <div class="text-end mt-4">
+        <%= link_to "Edit Profile", edit_dashboard_seller_seller_detail_path, class: "btn btn-outline-success px-4 py-2" %>
+      </div>
+    </div>
+  </div>
+</div>

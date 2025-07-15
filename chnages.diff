@@ -1,0 +1,385 @@
+diff --git a/Gemfile b/Gemfile
+index e1d8b95..a5c4828 100644
+--- a/Gemfile
++++ b/Gemfile
+@@ -42,6 +42,7 @@ gem "active_storage_validations", "~> 0.9.0"
+ 
+ # Reduces boot times through caching; required in config/boot.rb
+ gem "bootsnap", require: false
++gem "byebug"
+ 
+ # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+ # gem "image_processing", "~> 1.2"
+diff --git a/Gemfile.lock b/Gemfile.lock
+index 2ad31ca..42dbf07 100644
+--- a/Gemfile.lock
++++ b/Gemfile.lock
+@@ -92,6 +92,7 @@ GEM
+     brakeman (7.0.2)
+       racc
+     builder (3.3.0)
++    byebug (12.0.0)
+     capybara (3.40.0)
+       addressable
+       matrix
+@@ -375,6 +376,7 @@ DEPENDENCIES
+   bootsnap
+   bootstrap (~> 5.3.1)
+   brakeman
++  byebug
+   capybara
+   cssbundling-rails (~> 1.4)
+   debug
+diff --git a/app/controllers/dashboard/seller/home_controller.rb b/app/controllers/dashboard/seller/home_controller.rb
+index f423b9a..60c47f2 100644
+--- a/app/controllers/dashboard/seller/home_controller.rb
++++ b/app/controllers/dashboard/seller/home_controller.rb
+@@ -4,6 +4,8 @@ module Dashboard
+             before_action:authenticate_user!
+             before_action:authorize_seller!
+ 
++            layout "seller_layout"
++
+             private
+             def authorize_seller!
+                 unless current_user.has_role?(:seller)
+diff --git a/app/controllers/users/sessions_controller.rb b/app/controllers/users/sessions_controller.rb
+index 168133e..cd3951a 100644
+--- a/app/controllers/users/sessions_controller.rb
++++ b/app/controllers/users/sessions_controller.rb
+@@ -2,6 +2,7 @@ class Users::SessionsController < Devise::SessionsController
+   protected
+ 
+   def after_sign_in_path_for(resource)
++   
+     if resource.has_role?(:seller)
+       dashboard_seller_root_path
+     elsif resource.has_role?(:buyer)
+diff --git a/app/views/layouts/seller_layout.html.erb b/app/views/layouts/seller_layout.html.erb
+index e69de29..4418f8b 100644
+--- a/app/views/layouts/seller_layout.html.erb
++++ b/app/views/layouts/seller_layout.html.erb
+@@ -0,0 +1,57 @@
++<!DOCTYPE html>
++<html>
++<head>
++  <title>Seller Dashboard</title>
++  <%= csrf_meta_tags %>
++  <%= csp_meta_tag %>
++  
++  <!-- External Styles -->
++  <%= stylesheet_link_tag "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css", media: "all" %>
++  <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", media: "all" %>
++  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
++  <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
++  
++  <style>
++    * {
++      box-sizing: border-box;
++    }
++    
++    body {
++      margin: 0;
++      padding: 0;
++      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
++      background-color: #f9fafb;
++      overflow-x: hidden;
++    }
++    
++    .dashboard-container {
++      display: flex;
++      min-height: 100vh;
++    }
++    
++    .page-wrapper {
++      flex: 1;
++      padding: 30px;
++      background-color: #f9fafb;
++      min-height: 100vh;
++      margin-left: 280px;
++      transition: margin-left 0.3s ease;
++    }
++    
++    @media (max-width: 768px) {
++      .page-wrapper {
++        margin-left: 0;
++        padding: 15px;
++      }
++    }
++  </style>
++</head>
++<body>
++  <div class="dashboard-container">
++    <%= render "shared/sidebar" %>
++    <div class="page-wrapper">
++      <%= yield %>
++    </div>
++  </div>
++</body>
++</html>
+\ No newline at end of file
+diff --git a/app/views/shared/_sidebar.html.erb b/app/views/shared/_sidebar.html.erb
+index e69de29..9f8d733 100644
+--- a/app/views/shared/_sidebar.html.erb
++++ b/app/views/shared/_sidebar.html.erb
+@@ -0,0 +1,248 @@
++<div class="sidebar-container">
++  <div class="user-profile-section">
++    <div class="user-info">
++      <div class="user-details">
++        <img src="/placeholder-profile.jpg" class="sidebar-profile-pic" />
++
++        <div class="user-text">
++          <h6 class="user-name mb-0">
++            <a href="/dashboard/seller/profile" class="text-decoration-none text-dark">Seller Name</a>
++          </h6>
++        </div>
++      </div>
++
++      <form class="button_to" method="post" action="/users/sign_out">
++        <input type="hidden" name="_method" value="delete" />
++        <button class="btn logout-btn" title="Logout" type="submit">
++          <i class="fas fa-sign-out-alt"></i>
++        </button>
++      </form>
++    </div>
++  </div>
++
++  <nav class="sidebar-nav">
++    <div class="nav-section">
++      <h6 class="section-title">Analytics</h6>
++      <ul class="nav-list">
++        <li class="nav-item active">
++          <a href="/dashboard/seller/dashboard" class="nav-link">
++            <i class="fas fa-tachometer-alt"></i>
++            <span>Dashboard</span>
++          </a>
++        </li>
++      </ul>
++    </div>
++
++    <div class="nav-section">
++      <h6 class="section-title">Store Management</h6>
++      <ul class="nav-list">
++        <li class="nav-item">
++          <a href="/dashboard/seller/products" class="nav-link">
++            <i class="fas fa-box"></i>
++            <span>Products</span>
++          </a>
++        </li>
++        <li class="nav-item">
++          <a href="/dashboard/seller/categories" class="nav-link">
++            <i class="fas fa-tags"></i>
++            <span>Categories</span>
++          </a>
++        </li>
++        <li class="nav-item">
++          <a href="#" class="nav-link">
++            <i class="fas fa-shopping-cart"></i>
++            <span>Orders</span>
++          </a>
++        </li>
++        <li class="nav-item">
++          <a href="#" class="nav-link">
++            <i class="fas fa-chart-line"></i>
++            <span>Sales</span>
++          </a>
++        </li>
++      </ul>
++    </div>
++  </nav>
++</div>
++
++<style>
++.sidebar-container {
++  width: 280px;
++  height: 100vh;
++  background: #ffffff;
++  border-right: 1px solid #e5e7eb;
++  padding: 0;
++  position: fixed;
++  left: 0;
++  top: 0;
++  overflow-y: auto;
++  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
++  z-index: 1000;
++}
++
++.user-profile-section {
++  padding: 20px;
++  border-bottom: 1px solid #e5e7eb;
++}
++.sidebar-profile-pic {
++  width: 45px;
++  height: 45px;
++  object-fit: cover;
++  border-radius: 50%;
++  border: 2px solid #22c55e;
++}
++
++.user-info {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  background: #f8f9fa;
++  padding: 15px;
++  border-radius: 15px;
++}
++
++.user-details {
++  display: flex;
++  align-items: center;
++  gap: 12px;
++}
++
++.user-text {
++  display: flex;
++  flex-direction: column;
++}
++
++.user-name {
++  font-size: 16px;
++  font-weight: 600;
++  color: #1f2937;
++  margin: 0;
++}
++
++.logout-btn {
++  background: #22c55e;
++  border: none;
++  border-radius: 12px;
++  width: 45px;
++  height: 45px;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  color: white;
++  font-size: 18px;
++  transition: all 0.3s ease;
++}
++
++.logout-btn:hover {
++  background: #16a34a;
++  transform: translateY(-2px);
++}
++
++.sidebar-nav {
++  padding: 20px 0;
++}
++
++.nav-section {
++  margin-bottom: 30px;
++  padding: 0 20px;
++}
++
++.section-title {
++  font-size: 12px;
++  font-weight: 600;
++  color: #9ca3af;
++  text-transform: uppercase;
++  letter-spacing: 0.5px;
++  margin-bottom: 15px;
++  padding-left: 10px;
++}
++
++.nav-list {
++  list-style: none;
++  padding: 0;
++  margin: 0;
++}
++
++.nav-item {
++  margin-bottom: 5px;
++}
++
++.nav-link {
++  display: flex;
++  align-items: center;
++  gap: 15px;
++  padding: 12px 15px;
++  color: #6b7280;
++  text-decoration: none;
++  border-radius: 12px;
++  transition: all 0.3s ease;
++  font-weight: 500;
++  position: relative;
++}
++
++.nav-link:hover {
++  background: #f0fdf4;
++  color: #22c55e;
++  text-decoration: none;
++  transform: translateX(5px);
++}
++
++.nav-item.active .nav-link {
++  background: #22c55e;
++  color: white;
++}
++
++.nav-item.active .nav-link::after {
++  content: '';
++  position: absolute;
++  right: 15px;
++  top: 50%;
++  transform: translateY(-50%);
++  width: 6px;
++  height: 6px;
++  background: white;
++  border-radius: 50%;
++}
++
++.nav-link i {
++  font-size: 18px;
++  width: 20px;
++  text-align: center;
++}
++
++.nav-link span {
++  font-size: 15px;
++}
++
++.badge {
++  background: #ef4444;
++  color: white;
++  font-size: 11px;
++  padding: 2px 6px;
++  border-radius: 10px;
++  margin-left: auto;
++  font-weight: 600;
++}
++
++@media (max-width: 768px) {
++  .sidebar-container {
++    width: 100%;
++    height: auto;
++    position: relative;
++    box-shadow: none;
++    border-right: none;
++    border-bottom: 1px solid #e5e7eb;
++  }
++
++  .user-info {
++    flex-direction: column;
++    gap: 15px;
++  }
++
++  .logout-btn {
++    width: 100%;
++    height: 40px;
++    border-radius: 8px;
++  }
++}
++</style>
+diff --git a/config/routes.rb b/config/routes.rb
+index 95a5bec..8908b9a 100644
+--- a/config/routes.rb
++++ b/config/routes.rb
+@@ -4,6 +4,7 @@ Rails.application.routes.draw do
+ 
+   devise_for :users, controllers: {
+     registrations: 'users/registrations',
++    sessions: 'users/sessions'
+   }
+ 
+   namespace :dashboard do

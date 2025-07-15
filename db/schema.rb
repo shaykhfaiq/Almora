@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_08_091646) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_14_091138) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,57 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_08_091646) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_categories_on_user_id"
+  end
+
+  create_table "categorizations", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_categorizations_on_category_id"
+    t.index ["product_id"], name: "index_categorizations_on_product_id"
+  end
+
+  create_table "option_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "option_values", force: :cascade do |t|
+    t.string "value"
+    t.bigint "option_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["option_type_id"], name: "index_option_values_on_option_type_id"
+  end
+
+  create_table "product_option_types", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "option_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["option_type_id"], name: "index_product_option_types_on_option_type_id"
+    t.index ["product_id"], name: "index_product_option_types_on_product_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.decimal "base_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_products_on_user_id"
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
@@ -50,6 +101,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_08_091646) do
     t.datetime "updated_at", null: false
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
+  end
+
+  create_table "seller_details", force: :cascade do |t|
+    t.string "store_name"
+    t.string "store_url"
+    t.string "business_email"
+    t.string "ntn_number"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_seller_details_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -61,6 +123,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_08_091646) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "full_name"
+    t.string "contact"
+    t.string "country"
+    t.string "city"
+    t.text "address"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -73,6 +139,36 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_08_091646) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  create_table "variant_option_values", force: :cascade do |t|
+    t.bigint "variant_id", null: false
+    t.bigint "option_value_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["option_value_id"], name: "index_variant_option_values_on_option_value_id"
+    t.index ["variant_id"], name: "index_variant_option_values_on_variant_id"
+  end
+
+  create_table "variants", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.string "sku"
+    t.decimal "price"
+    t.integer "stock_quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_variants_on_product_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "categories", "users"
+  add_foreign_key "categorizations", "categories"
+  add_foreign_key "categorizations", "products"
+  add_foreign_key "option_values", "option_types"
+  add_foreign_key "product_option_types", "option_types"
+  add_foreign_key "product_option_types", "products"
+  add_foreign_key "products", "users"
+  add_foreign_key "seller_details", "users"
+  add_foreign_key "variant_option_values", "option_values"
+  add_foreign_key "variant_option_values", "variants"
+  add_foreign_key "variants", "products"
 end

@@ -1,7 +1,12 @@
 class User < ApplicationRecord
   rolify
   
-  
+
+  has_many :products
+  has_many :categories
+  has_one :seller_detail, dependent: :destroy
+  has_one_attached :display_picture
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 

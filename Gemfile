@@ -42,6 +42,7 @@ gem "active_storage_validations", "~> 0.9.0"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
+gem "byebug"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
