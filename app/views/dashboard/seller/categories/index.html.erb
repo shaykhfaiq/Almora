@@ -1,0 +1,41 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-success">Categories</h2>
+    <%= link_to "Add New Category", new_dashboard_seller_category_path, class: "btn btn-success" %>
+  </div>
+
+  <% if @categories.empty? %>
+    <div class="alert alert-info">
+      No categories found. <%= link_to "Create one", new_dashboard_seller_category_path, class: "text-success fw-bold" %>.
+    </div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered shadow-sm">
+        <thead class="table-success text-dark">
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th class="text-center" style="width: 120px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @categories.each do |category| %>
+            <tr>
+              <td><%= category.name %></td>
+              <td><%= truncate(category.description, length: 100) %></td>
+              <td class="text-center">
+                <%= link_to edit_dashboard_seller_category_path(category), class: "btn btn-sm btn-outline-success me-2", title: "Edit" do %>
+                  <i class="fas fa-edit"></i>
+                <% end %>
+                <%= button_to dashboard_seller_category_path(category), method: :delete, data: { turbo: false },data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger", form: { class: "d-inline" } do %>
+                <i class="fas fa-trash"></i>
+                <% end %>
+
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

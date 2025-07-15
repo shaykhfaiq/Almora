@@ -1,0 +1,71 @@
+<div class="container my-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      <h2 class="mb-4 text-success fw-bold">Add New Category</h2>
+
+     <%= form_with(model: [:dashboard, :seller, @category], local: true, data: { turbo: false }, class: "row g-3") do |f| %>
+
+        <% if @category.errors.any? %>
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              <% @category.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="col-md-6">
+          <%= f.label :name, "Category Name", class: "form-label fw-semibold text-dark" %>
+          <%= f.text_field :name, class: "form-control custom-input", placeholder: "e.g. Electronics" %>
+        </div>
+
+       
+
+        <div class="col-12">
+          <%= f.label :description, "Description", class: "form-label fw-semibold text-dark" %>
+          <%= f.text_area :description, rows: 4, class: "form-control custom-input", placeholder: "Write something about this category..." %>
+        </div>
+
+        <div class="col-12 d-flex justify-content-end mt-3">
+          <%= f.submit "Create Category", class: "btn btn-success custom-btn" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .custom-input {
+    border-radius: 10px;
+    border: 1px solid #d1fae5;
+    background-color: #f0fdf4;
+    color: #065f46;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .custom-input:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 0.15rem rgba(34, 197, 94, 0.25);
+    background-color: #ffffff;
+    color: #065f46;
+  }
+
+  .custom-btn {
+    background: linear-gradient(to right, #22c55e, #16a34a);
+    border: none;
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: 8px;
+    color: #fff;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .custom-btn:hover {
+    background: linear-gradient(to right, #16a34a, #15803d);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
+  }
+</style>
+
