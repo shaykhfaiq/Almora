@@ -1,0 +1,39 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow border-0">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0">Edit Option Type</h4>
+        </div>
+
+        <div class="card-body">
+          <%= form_with model: [:dashboard, :seller, @option_type], local: true do |form| %>
+            <% if @option_type.errors.any? %>
+              <div class="alert alert-danger">
+                <h5><%= pluralize(@option_type.errors.count, "error") %> prevented update:</h5>
+                <ul>
+                  <% @option_type.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= form.label :name, class: "form-label" %>
+              <%= form.text_field :name, class: "form-control", placeholder: "Update option type name" %>
+            </div>
+
+            <div class="d-grid">
+              <%= form.submit "Update", class: "btn btn-success btn-lg" %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="card-footer bg-light text-end">
+          <%= link_to "Back to Option Types", dashboard_seller_option_types_path, class: "btn btn-outline-success" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

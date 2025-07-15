@@ -1,6 +1,5 @@
 class User < ApplicationRecord
   rolify
-  
 
   has_many :products
   has_many :categories
@@ -10,11 +9,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  
   attr_accessor :first_name, :last_name
-
   
-  before_validation :set_full_name
 
   private
 

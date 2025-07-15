@@ -35,6 +35,15 @@ class Dashboard::Seller::CategoriesController < ApplicationController
     end
   end
 
+  def destroy
+    @category=current_user.categories.find(params[:id])
+    if @category.destroy
+      redirect_to dashboard_seller_categories_path,notice:"Category deleted successfully"
+    else
+      redirect_to dashboard_seller_categories_path, alert: "Failed"
+    end
+  end
+
   private
 
   def set_category

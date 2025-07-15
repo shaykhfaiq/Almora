@@ -1,0 +1,55 @@
+<div class="container mt-5">
+  <div class="card shadow border-0">
+    <div class="card-header bg-success text-white">
+      <h4 class="mb-0">Option Types</h4>
+    </div>
+
+    <div class="card-body">
+      <% if notice %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+
+      <% if alert %>
+        <div class="alert alert-danger"><%= alert %></div>
+      <% end %>
+
+      <%= form_with model: [:dashboard, :seller, @option_type], data: { turbo: false },local: true, class: "row g-3 mb-4 align-items-end" do |form| %>
+        <div class="col-md-8">
+          <%= form.label :name, "New Option Type", class: "form-label" %>
+          <%= form.text_field :name, class: "form-control", placeholder: "e.g., Color, Size, Material" %>
+        </div>
+        <div class="col-md-4 d-grid">
+          <%= form.submit "Create Option Type", class: "btn btn-success" %>
+        </div>
+      <% end %>
+
+      <% if @option_types.any? %>
+        <table class="table table-bordered table-hover mt-3">
+          <thead class="table-success">
+            <tr>
+              <th>Name</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @option_types.each do |option_type| %>
+              <tr>
+                <td><%= option_type.name %></td>
+                <td class="text-center">
+                  <%= link_to "Edit", edit_dashboard_seller_option_type_path(option_type), class: "btn btn-sm btn-outline-primary" %>
+                  <%= link_to "Add Values", dashboard_seller_option_type_option_values_path(option_type), class: "btn btn-sm btn-outline-primary" %>
+                  <%= button_to "Delete", dashboard_seller_option_type_path(option_type),
+                              method: :delete,
+                              data: {  turbo: false ,confirm: "Are you sure?" },
+                              class: "btn btn-sm btn-outline-danger" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="text-muted">No option types have been created yet.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

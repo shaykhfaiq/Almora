@@ -4,7 +4,7 @@
     <%= link_to "← Back to Categories", dashboard_seller_categories_path, class: "btn btn-outline-success" %>
   </div>
 
-  <%= form_with model: [:dashboard, :seller, @category],class: "bg-white p-4 rounded shadow-sm", local: true do |f| %>
+  <%= form_with model: [:dashboard, :seller, @category],data: { turbo: false },class: "bg-white p-4 rounded shadow-sm", local: true do |f| %>
     <% if @category.errors.any? %>
       <div class="alert alert-danger">
         <strong>Please fix the following errors:</strong>

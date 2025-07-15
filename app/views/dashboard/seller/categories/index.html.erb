@@ -27,7 +27,7 @@
                 <%= link_to edit_dashboard_seller_category_path(category), class: "btn btn-sm btn-outline-success me-2", title: "Edit" do %>
                   <i class="fas fa-edit"></i>
                 <% end %>
-                <%= button_to dashboard_seller_category_path(category), method: :delete, data: { turbo: false },data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger", form: { class: "d-inline" } do %>
+                <%= button_to dashboard_seller_category_path(category), method: :delete, data: { turbo: false, turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger", form: { class: "d-inline" } do %>
                 <i class="fas fa-trash"></i>
                 <% end %>
 
