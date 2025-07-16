@@ -44,7 +44,9 @@
 
             <div class="mb-3">
               <%= form.label :images, "Upload Images", class: "form-label" %>
-              <%= form.file_field :images, multiple: true, class: "form-control" %>
+              <%= form.file_field :images, multiple: true, accept: "image/*", class: "form-control", onchange: "previewImages(event)" %>
+
+              <div id="image-previews" class="d-flex gap-2 mt-3 flex-wrap"></div>
             </div>
 
             <div class="d-grid">
@@ -61,3 +63,27 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  function previewImages(event) {
+    const container = document.getElementById('image-previews');
+    container.innerHTML = ''; 
+
+    Array.from(event.target.files).forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'img-thumbnail';
+        img.style.width = '100px';
+        img.style.height = '100px';
+        img.style.objectFit = 'cover';
+        container.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+</script>

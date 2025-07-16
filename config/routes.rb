@@ -18,8 +18,8 @@ Rails.application.routes.draw do
         resources :product_option_types, only: [:index, :new, :create, :destroy]
       end
 
-      # NEW: Top-level Variants index route (for all products)
-      get "variants", to: "variants#all", as: :all_variants
+      
+      get "variants/all", to: "variants#all_index", as: :all_variants
 
       resources :option_types do
         resources :option_values, only: [:index, :new, :create, :destroy]
