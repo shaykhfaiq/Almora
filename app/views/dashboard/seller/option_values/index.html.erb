@@ -1,0 +1,71 @@
+<div class="container mt-5">
+  <div class="card shadow border-0">
+    <div class="card-header bg-success text-white">
+      <h3 class="mb-0">Option Values for "<%= @option_type.name %>"</h3>
+    </div>
+
+    <div class="card-body">
+
+      <% if notice %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+
+      <% if alert %>
+        <div class="alert alert-danger"><%= alert %></div>
+      <% end %>
+
+      <h5 class="text-success mb-3">Add New Option Value</h5>
+
+      <%= form_with url: dashboard_seller_option_type_option_values_path(@option_type), data: { turbo: false },model: @option_value, local: true do |form| %>
+        <div class="row g-3 align-items-end mb-4">
+          <div class="col-md-6">
+            <%= form.label :value, class: "form-label" %>
+            <%= form.text_field :value, class: "form-control", placeholder: "e.g., Red, Large, Cotton" %>
+          </div>
+          <div class="col-md-auto">
+            <%= form.submit "Add Value", class: "btn btn-success" %>
+          </div>
+        </div>
+      <% end %>
+
+      <hr>
+
+      <h5 class="text-success mb-3">All Option Values</h5>
+
+      <% if @option_values.any? %>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-success">
+              <tr>
+                <th>ID</th>
+                <th>Value</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @option_values.each do |value| %>
+                <tr>
+                  <td><%= value.id %></td>
+                  <td><%= value.value %></td>
+                  <td class="text-center">
+                    <%= link_to "Delete",
+                      dashboard_seller_option_type_option_value_path(@option_type, value),
+                      method: :delete,
+                      data: { confirm: "Are you sure you want to delete this value?" },
+                      class: "btn btn-sm btn-outline-danger" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted">No option values defined yet.</p>
+      <% end %>
+    </div>
+
+    <div class="card-footer bg-light text-end">
+      <%= link_to "Back to Option Types", dashboard_seller_option_types_path, class: "btn btn-outline-success" %>
+    </div>
+  </div>
+</div>
