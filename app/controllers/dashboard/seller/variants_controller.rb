@@ -1,7 +1,7 @@
 class Dashboard::Seller::VariantsController < ApplicationController
   layout "seller_layout"
   before_action :authenticate_user!
-  before_action :set_product
+  before_action :set_product, except: [:all_index]
   before_action :set_variant, only: [:destroy]
 
   def index
@@ -29,6 +29,10 @@ class Dashboard::Seller::VariantsController < ApplicationController
   def destroy
     @variant.destroy
     redirect_to dashboard_seller_product_variants_path(@product), notice: 'Variant deleted.'
+  end
+
+  def all_index
+    @products = current_user.products.includes(variants: [:option_values])
   end
 
   private

@@ -5,15 +5,15 @@
         <div class="card-header bg-success text-white">
           <h3 class="mb-0">Edit Product</h3>
         </div>
-        <div class="card-body">
-          <%= form_with(model: [:dashboard, :seller, @product],data: { turbo: false }, local: true) do |form| %>
 
+        <div class="card-body">
+          <%= form_with(model: [:dashboard, :seller, @product], data: { turbo: false }, local: true, html: { multipart: true }) do |form| %>
             <% if @product.errors.any? %>
               <div class="alert alert-danger">
                 <h5><%= pluralize(@product.errors.count, "error") %> prevented this product from being saved:</h5>
                 <ul class="mb-0">
-                  <% @product.errors.full_messages.each do |message| %>
-                    <li><%= message %></li>
+                  <% @product.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
                   <% end %>
                 </ul>
               </div>
@@ -26,7 +26,7 @@
 
             <div class="mb-3">
               <%= form.label :description, class: "form-label" %>
-              <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Enter product description" %>
+              <%= form.text_area :description, rows: 4, class: "form-control", placeholder: "Enter product description" %>
             </div>
 
             <div class="mb-3">
@@ -34,17 +34,56 @@
               <%= form.number_field :base_price, step: 0.01, class: "form-control", placeholder: "Enter base price" %>
             </div>
 
-            <div class="d-grid gap-2">
-              <%= form.submit "Update Product", class: "btn btn-success btn-lg" %>
+            <div class="mb-3">
+              <%= form.label :images, "Upload or Add More Images", class: "form-label" %>
+              <%= form.file_field :images, multiple: true, class: "form-control", id: "product_images_input" %>
             </div>
 
+            <div class="mb-3" id="preview-container">
+              <h5>Image Previews</h5>
+              <div class="d-flex flex-wrap gap-3" id="preview-images">
+                
+                <% if @product.images.attached? %>
+                  <% @product.images.each do |image| %>
+                    <img src="<%= url_for(image) %>" class="img-thumbnail" style="width: 120px; height: 120px;" />
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <%= form.submit "Update Product", class: "btn btn-success btn-lg" %>
+            </div>
           <% end %>
         </div>
 
         <div class="card-footer text-end bg-light">
-          <%= link_to 'Back to Products', dashboard_seller_products_path, class: "btn btn-outline-success" %>
+          <%= link_to "Back to Products", dashboard_seller_products_path, class: "btn btn-outline-success" %>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("product_images_input");
+    const previewImages = document.getElementById("preview-images");
+
+    input.addEventListener("change", function () {
+      Array.from(input.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.className = "img-thumbnail";
+          img.style.width = "120px";
+          img.style.height = "120px";
+          previewImages.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  });
+</script>

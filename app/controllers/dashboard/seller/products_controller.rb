@@ -26,22 +26,32 @@ class Dashboard::Seller::ProductsController < ApplicationController
   end
 
   def create
-    @product = current_user.products.build(product_params)
+  @product = current_user.products.build(product_params.except(:images))
 
-    if @product.save
-      redirect_to new_dashboard_seller_product_variant_path(@product), notice: 'Product was successfully created.'
-    else
-      @categories = current_user.categories
-      render :new
+  if @product.save
+    
+    if product_params[:images].present?
+      @product.images.attach(product_params[:images])
     end
+
+    redirect_to new_dashboard_seller_product_variant_path(@product), notice: 'Product was successfully created.'
+  else
+    @categories = current_user.categories
+    render :new
   end
+end
+
 
   def edit
     @categories = current_user.categories
   end
 
   def update
-    if @product.update(product_params)
+    if @product.update(product_params.except(:images))
+      
+      if product_params[:images].present?
+        @product.images.attach(product_params[:images])
+      end
       redirect_to dashboard_seller_product_path(@product), notice: 'Product was successfully updated.'
     else
       @categories = current_user.categories
@@ -66,7 +76,7 @@ class Dashboard::Seller::ProductsController < ApplicationController
   def product_params
     params.require(:product).permit(
       :name, :description, :base_price, :category_id,
-      images: []
+      images: [] 
     )
   end
 

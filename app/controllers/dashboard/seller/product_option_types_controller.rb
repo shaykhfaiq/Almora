@@ -8,22 +8,32 @@ module Dashboard
 
       def create
         @option_type = OptionType.find(params[:option_type_id])
+
         unless @product.option_types.include?(@option_type)
           @product.option_types << @option_type
-          redirect_to dashboard_seller_product_variants_path(@option_type) , notice: 'Option type added.'
+          flash.now[:notice] = 'Option type added.'
         else
-          redirect_to dashboard_seller_product_variants_path(@option_type), alert: 'Option type already assigned.'
-        end
+        flash.now[:alert] = 'Option type already assigned.'
       end
+
+  
+      @variant = @product.variants.new
+      @option_types = @product.option_types.includes(:option_values)
+     render "dashboard/seller/variants/new", status: :unprocessable_entity
+    end
+
 
       def destroy
         product_option_type = @product.product_option_types.find_by(option_type_id: params[:id])
         if product_option_type
           product_option_type.destroy
-          redirect_to dashboard_seller_product_path(@product), notice: 'Option type removed.'
+          flash[:notice] = 'Option type removed.'
         else
-          redirect_to dashboard_seller_product_path(@product), alert: 'Option type not found.'
+          flash[:alert] = 'Option type not found.'
         end
+
+        
+        redirect_to dashboard_seller_product_variants_path(@product)
       end
 
       private
