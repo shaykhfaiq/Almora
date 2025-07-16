@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Almora - Buyer's Portal</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", media: "all" %>
+    <%= javascript_include_tag "application", defer: true %>
+    <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" %>
+  </head>
+
+  <body class="d-flex flex-column min-vh-100 bg-white">
+    
+    <%= render "shared/header" %>
+
+    <main class="flex-grow-1 py-4">
+      <div class="container">
+        <%= yield %>
+      </div>
+    </main>
+
+    <%= render "shared/footer" %>
+
+  </body>
+</html>
