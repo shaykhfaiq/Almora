@@ -5,6 +5,8 @@ class User < ApplicationRecord
   has_many :categories
   has_one :seller_detail, dependent: :destroy
   has_one_attached :display_picture
+  has_one :cart, dependent: :destroy
+  has_many :orders, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable

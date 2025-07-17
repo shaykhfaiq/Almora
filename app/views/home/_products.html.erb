@@ -1,0 +1,8 @@
+<div class="container mb-5">
+  <h2 class="mb-4 text-success">Get Your's Today</h2>
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
+    <% products.each do |product| %>
+      <%= render 'shared/product_card', product: product %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,135 @@
+<div class="container mb-5">
+  <div class="text-center mb-5">
+    <h2 class="display-5 fw-bold text-success mb-3">Shop by Category</h2>
+    <p class="lead text-muted">Discover our wide range of products across different categories</p>
+  </div>
+  
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <% categories.each do |category| %>
+      <div class="col">
+        <div class="card h-100 border-0 shadow-sm category-card">
+          <div class="card-body text-center d-flex flex-column justify-content-between p-4">
+            <div>
+              <div class="category-icon mb-3">
+                <i class="fas fa-tag text-success fs-1"></i>
+              </div>
+              <h5 class="card-title fw-bold text-dark mb-3"><%= category.name %></h5>
+            </div>
+            <div>
+              <%= link_to 'Explore Category', buyer_category_path(category), 
+                  class: 'btn btn-success btn-sm px-4 py-2 rounded-pill explore-btn' %>
+            </div>
+          </div>
+          <div class="card-overlay"></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .category-card {
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 15px !important;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(40, 167, 69, 0.2) !important;
+    border: 2px solid rgba(40, 167, 69, 0.3);
+  }
+  
+  .category-card .card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.05) 0%, rgba(40, 167, 69, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .category-card:hover .card-overlay {
+    opacity: 1;
+  }
+  
+  .category-icon {
+    transition: transform 0.3s ease;
+  }
+  
+  .category-card:hover .category-icon {
+    transform: scale(1.1);
+  }
+  
+  .explore-btn {
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+  
+  .explore-btn:hover {
+    background-color: #1e7e34 !important;
+    border-color: #1e7e34 !important;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+  }
+  
+  .card-title {
+    transition: color 0.3s ease;
+  }
+  
+  .category-card:hover .card-title {
+    color: #28a745 !important;
+  }
+  
+  
+  @media (max-width: 576px) {
+    .category-card {
+      margin-bottom: 1rem;
+    }
+    
+    .display-5 {
+      font-size: 2rem;
+    }
+  }
+  
+  
+  .container:hover .category-card:not(:hover) {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+  
+  
+  .category-card {
+    will-change: transform;
+  }
+  
+  
+  .category-card.featured {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+  }
+  
+  .category-card.featured .card-title,
+  .category-card.featured .category-icon {
+    color: white !important;
+  }
+  
+  .category-card.featured .explore-btn {
+    background-color: white;
+    color: #28a745;
+    border-color: white;
+  }
+  
+  .category-card.featured .explore-btn:hover {
+    background-color: #f8f9fa;
+    color: #1e7e34;
+  }
+</style>

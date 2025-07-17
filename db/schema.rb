@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_15_102803) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_17_061307) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_15_102803) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "cart_items", force: :cascade do |t|
+    t.bigint "cart_id", null: false
+    t.bigint "variant_id", null: false
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+    t.index ["variant_id"], name: "index_cart_items_on_variant_id"
+  end
+
+  create_table "carts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -72,6 +89,37 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_15_102803) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["option_type_id"], name: "index_option_values_on_option_type_id"
+  end
+
+  create_table "order_items", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.bigint "product_id", null: false
+    t.bigint "variant_id", null: false
+    t.string "product_name"
+    t.string "variant_description"
+    t.integer "unit_price"
+    t.integer "quantity"
+    t.integer "total_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
+    t.index ["variant_id"], name: "index_order_items_on_variant_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "status"
+    t.integer "sub_total"
+    t.integer "total"
+    t.integer "shipping_fee"
+    t.string "payment_method"
+    t.string "payment_status"
+    t.text "shipping_address"
+    t.datetime "placed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "product_option_types", force: :cascade do |t|
@@ -162,10 +210,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_15_102803) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "cart_items", "carts"
+  add_foreign_key "cart_items", "variants"
+  add_foreign_key "carts", "users"
   add_foreign_key "categories", "users"
   add_foreign_key "categorizations", "categories"
   add_foreign_key "categorizations", "products"
   add_foreign_key "option_values", "option_types"
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "order_items", "products"
+  add_foreign_key "order_items", "variants"
+  add_foreign_key "orders", "users"
   add_foreign_key "product_option_types", "option_types"
   add_foreign_key "product_option_types", "products"
   add_foreign_key "products", "categories"
