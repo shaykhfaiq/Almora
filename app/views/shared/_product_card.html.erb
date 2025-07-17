@@ -1,0 +1,51 @@
+<div class="col">
+  <div class="card h-100 border border-success-subtle rounded-4 shadow-sm product-card">
+    <%= link_to buyer_product_path(product), class: "text-decoration-none text-dark d-block h-100" do %>
+      <% if product.images.attached? %>
+        <%= image_tag url_for(product.images.first), class: "card-img-top fade-image rounded-top-4", alt: product.name, style: "height: 300px; width: 100%; object-fit: cover;" %>
+      <% else %>
+        <%= image_tag "placeholder.png", class: "card-img-top fade-image rounded-top-4", alt: "No Image", style: "height: 300px; width: 100%; object-fit: cover;" %>
+      <% end %>
+
+      <div class="card-body">
+        <h5 class="card-title fw-semibold mb-1"><%= product.name %></h5>
+        <p class="card-text text-success fw-bold fs-5">Rs. <%= product.base_price %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.product-card {
+  border: 2px solid #d1e7dd; /* Bootstrap 'success-subtle' */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  border-radius: 1rem; /* Matches rounded-4 */
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 25px rgba(0, 128, 0, 0.25);
+  border-color: #198754; /* Bootstrap green */
+}
+
+.fade-image {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const images = document.querySelectorAll(".fade-image");
+    images.forEach(img => {
+      if (img.complete) {
+        img.style.opacity = 1;
+      } else {
+        img.onload = () => {
+          img.style.opacity = 1;
+        };
+      }
+    });
+  });
+</script>
