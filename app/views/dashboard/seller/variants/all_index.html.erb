@@ -9,7 +9,7 @@
         <% @products.each do |product| %>
           <div class="border-bottom px-4 py-3">
             <h5 class="text-success d-flex justify-content-between align-items-center">
-              <%= product.name %> 
+              <%= product.name %>
               <%= link_to "Add Variant", new_dashboard_seller_product_variant_path(product), class: "btn btn-sm btn-outline-success" %>
             </h5>
 

@@ -10,15 +10,13 @@
           <% if notice %>
             <div class="alert alert-success"><%= notice %></div>
           <% end %>
-
           <% if alert %>
             <div class="alert alert-danger"><%= alert %></div>
           <% end %>
 
           <% unassigned_option_types = OptionType.all - @product.option_types %>
 
-          
-          <h5 class="text-success">Assign Option Types</h5>
+          <h5 class="text-success">Assigned Option Types</h5>
           <% if @product.option_types.any? %>
             <ul class="list-group mb-3">
               <% @product.option_types.each do |option_type| %>
@@ -36,7 +34,6 @@
             <p class="text-muted">No option types assigned to this product yet.</p>
           <% end %>
 
-          
           <%= form_with url: dashboard_seller_product_product_option_types_path(@product), method: :post, data: { turbo: false }, local: true, class: "row g-3 align-items-end mb-4" do %>
             <div class="col-md-6">
               <%= label_tag :option_type_id, "Add Option Type", class: "form-label" %>
@@ -49,50 +46,29 @@
             </div>
           <% end %>
 
-          <hr>
+          <% if @product.option_types.any? %>
+            <hr>
+            <%= form_with url: dashboard_seller_product_variants_path(@product), method: :post, data: { turbo: false }, local: true do %>
+              <% @product.option_types.each do |option_type| %>
+                <div class="mb-3">
+                  <label class="form-label text-success"><%= option_type.name %> Values</label>
+                  <div class="row">
+                    <% option_type.option_values.each do |value| %>
+                      <div class="col-md-4">
+                        <div class="form-check">
+                          <%= check_box_tag "option_value_ids[#{option_type.id}][]", value.id, false, class: "form-check-input", id: "ov_#{option_type.id}_#{value.id}" %>
+                          <%= label_tag "ov_#{option_type.id}_#{value.id}", value.value, class: "form-check-label" %>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
 
-          
-          <h5 class="text-success mb-3">Create Variant</h5>
-          <%= form_with model: [@product, @variant], url: dashboard_seller_product_variants_path(@product), data: { turbo: false }, local: true do |form| %>
-
-            <% if @variant.errors.any? %>
-              <div class="alert alert-danger">
-                <ul>
-                  <% @variant.errors.full_messages.each do |msg| %>
-                    <li><%= msg %></li>
-                  <% end %>
-                </ul>
+              <div class="d-grid mt-4">
+                <%= submit_tag "Generate Variants", class: "btn btn-success btn-lg" %>
               </div>
             <% end %>
-
-            <div class="mb-3">
-              <%= form.label :sku, class: "form-label" %>
-              <%= form.text_field :sku, class: "form-control", placeholder: "Enter SKU" %>
-            </div>
-
-            <div class="mb-3">
-              <%= form.label :price, class: "form-label" %>
-              <%= form.number_field :price, step: 0.01, class: "form-control", placeholder: "Enter price" %>
-            </div>
-
-            <div class="mb-3">
-              <%= form.label :stock_quantity, class: "form-label" %>
-              <%= form.number_field :stock_quantity, class: "form-control", placeholder: "Enter stock quantity" %>
-            </div>
-
-            <% @product.option_types.each do |option_type| %>
-              <div class="mb-3">
-                <%= label_tag "option_value_ids_#{option_type.id}", option_type.name, class: "form-label" %>
-                <%= select_tag "option_value_ids[#{option_type.id}]",
-                      options_from_collection_for_select(option_type.option_values, :id, :value),
-                      include_blank: "Select #{option_type.name}",
-                      class: "form-select" %>
-              </div>
-            <% end %>
-
-            <div class="d-grid">
-              <%= form.submit "Create Variant", class: "btn btn-success btn-lg" %>
-            </div>
           <% end %>
         </div>
 
