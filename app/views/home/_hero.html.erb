@@ -15,7 +15,7 @@
         --accent-green: #6b8e23;
         --soft-white: #f8f9fa;
         --pure-white: #ffffff;
-        
+
         position: relative;
         height: 70vh;
         min-height: 400px;
@@ -166,7 +166,7 @@
 
     .hero-section .hero-features {
         position: absolute;
-        bottom: 60px;
+        bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
@@ -185,10 +185,10 @@
 
     .hero-section .hero-feature i {
         font-size: 1.8rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
         color: var(--accent-green);
         background: var(--pure-white);
-        padding: 12px;
+        padding: 16px;
         border-radius: 50%;
         width: 50px;
         height: 50px;
@@ -218,29 +218,29 @@
             height: 60vh;
             min-height: 350px;
         }
-        
+
         .hero-section .carousel-item {
             height: 60vh;
             min-height: 350px;
         }
-        
+
         .hero-section .hero-title {
             font-size: 2.2rem;
         }
-        
+
         .hero-section .hero-subtitle {
             font-size: 1rem;
         }
-        
+
         .hero-section .hero-buttons {
             flex-direction: column;
             align-items: center;
         }
-        
+
         .hero-section .hero-features {
             display: none;
         }
-        
+
         .hero-section .btn-hero-primary,
         .hero-section .btn-hero-secondary {
             width: 250px;
@@ -252,16 +252,16 @@
         .hero-section .hero-content {
             padding: 1rem;
         }
-        
+
         .hero-section .hero-title {
             font-size: 1.8rem;
         }
-        
+
         .hero-section {
             height: 50vh;
             min-height: 300px;
         }
-        
+
         .hero-section .carousel-item {
             height: 50vh;
             min-height: 300px;
@@ -304,9 +304,9 @@
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
-        
+
         <div class="carousel-inner h-100">
-            
+
             <div class="carousel-item active">
                 <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&h=900&q=80" class="d-block w-100" alt="Modern Shopping Mall Interior">
                 <div class="carousel-overlay">
@@ -324,8 +324,8 @@
                     </div>
                 </div>
             </div>
-            
-            
+
+
             <div class="carousel-item">
                 <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&h=900&q=80" class="d-block w-100" alt="Online Shopping Experience">
                 <div class="carousel-overlay">
@@ -343,8 +343,8 @@
                     </div>
                 </div>
             </div>
-            
-            
+
+
             <div class="carousel-item">
                 <img src="https://images.unsplash.com/photo-1472851294608-062f824d29cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&h=900&q=80" class="d-block w-100" alt="Modern Retail Store">
                 <div class="carousel-overlay">
@@ -363,8 +363,8 @@
                 </div>
             </div>
         </div>
-        
-        
+
+
         <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
@@ -373,8 +373,8 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
-        
-        
+
+
         <div class="hero-features d-none d-md-flex">
             <div class="hero-feature">
                 <i class="fas fa-shipping-fast"></i>
@@ -403,7 +403,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
+
     const carouselElement = document.querySelector('#heroCarousel');
     if (carouselElement) {
         const carousel = new bootstrap.Carousel(carouselElement, {
@@ -412,17 +412,17 @@ document.addEventListener('DOMContentLoaded', function() {
             touch: true,
             pause: 'hover'
         });
-        
-        
+
+
         carouselElement.addEventListener('mouseenter', function() {
             carousel.pause();
         });
-        
+
         carouselElement.addEventListener('mouseleave', function() {
             carousel.cycle();
         });
-        
-        
+
+
         carouselElement.addEventListener('slide.bs.carousel', function(e) {
             const activeContent = e.relatedTarget.querySelector('.hero-content');
             if (activeContent) {
@@ -433,8 +433,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    
+
+
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();

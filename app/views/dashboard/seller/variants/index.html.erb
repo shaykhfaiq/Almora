@@ -1,66 +1,63 @@
 <div class="container mt-5">
   <div class="card shadow border-0">
     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">All Product Variants</h4>
+      <h4 class="mb-0">Variants for <%= @product.name %></h4>
+      <%= link_to "Add Variant", new_dashboard_seller_product_variant_path(@product), class: "btn btn-sm btn-light" %>
     </div>
 
     <div class="card-body p-0">
-      <% if @products.any? %>
-        <% @products.each do |product| %>
-          <div class="border-bottom px-4 py-3">
-            <h5 class="text-success d-flex justify-content-between align-items-center">
-              <%= product.name %>
-              <%= link_to "Add Variant", new_dashboard_seller_product_variant_path(product), class: "btn btn-sm btn-outline-success" %>
-            </h5>
+      <% if @product.variants.any? %>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover mb-0">
+            <thead class="table-success">
+              <tr>
+                <th>SKU</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Option Values</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @product.variants.each do |variant| %>
+                <tr>
+                  <td><%= variant.sku %></td>
 
-            <% if product.variants.any? %>
-              <div class="table-responsive">
-                <table class="table table-striped table-hover mb-4">
-                  <thead class="table-success">
-                    <tr>
-                      <th>SKU</th>
-                      <th>Price</th>
-                      <th>Stock</th>
-                      <th>Option Values</th>
-                      <th class="text-center">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% product.variants.each do |variant| %>
-                      <tr>
-                        <td><%= variant.sku %></td>
-                        <td><%= number_to_currency(variant.price) %></td>
-                        <td><%= variant.stock_quantity %></td>
-                        <td>
-                          <% variant.option_values.each do |value| %>
-                            <span class="badge bg-success"><%= value.option_type.name %>: <%= value.value %></span>
-                          <% end %>
-                        </td>
-                        <td class="text-center">
-                          <%= link_to "Delete", dashboard_seller_product_variant_path(product, variant),
-                                      method: :delete,
-                                      data: { confirm: "Are you sure you want to delete this variant?" },
-                                      class: "btn btn-sm btn-outline-danger" %>
-                        </td>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-              </div>
-            <% else %>
-              <p class="text-muted mb-0">No variants available for this product.</p>
-            <% end %>
-          </div>
-        <% end %>
+                 <%= form_with model: variant, url: dashboard_seller_product_variant_path(@product, variant), local: true do |f| %>
+
+                    <td>
+                      <%= f.number_field :price, value: variant.price, step: 0.01, class: "form-control form-control-sm" %>
+                    </td>
+                    <td>
+                      <%= f.number_field :stock_quantity, value: variant.stock_quantity, class: "form-control form-control-sm" %>
+                    </td>
+                    <td>
+                      <% variant.option_values.each do |value| %>
+                        <span class="badge bg-success"><%= value.option_type.name %>: <%= value.value %></span>
+                      <% end %>
+                    </td>
+                    <td class="text-center">
+                      <%= f.submit "Save", class: "btn btn-sm btn-outline-success me-2" %>
+                      <%= link_to "Delete", dashboard_seller_product_variant_path(@product, variant),
+                                  method: :delete,
+                                  data: { confirm: "Are you sure?" },
+                                  class: "btn btn-sm btn-outline-danger" %>
+                    </td>
+                  <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
       <% else %>
         <div class="p-4">
-          <p class="text-muted">You haven’t created any products yet.</p>
+          <p class="text-muted">No variants available for this product.</p>
         </div>
       <% end %>
     </div>
 
     <div class="card-footer bg-light text-end">
-      <%= link_to "Back to Dashboard", dashboard_seller_root_path, class: "btn btn-outline-success" %>
+      <%= link_to "Back to Products", dashboard_seller_products_path, class: "btn btn-outline-success" %>
     </div>
   </div>
 </div>

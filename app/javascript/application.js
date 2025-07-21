@@ -11,3 +11,4 @@ window.jQuery = $;
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Rails UJS is active");
 });
+import * as bootstrap from "bootstrap"
