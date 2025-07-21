@@ -37,9 +37,9 @@
                           <% end %>
                         </td>
                         <td class="text-center">
-                          <%= link_to "Delete", dashboard_seller_product_variant_path(product, variant),
+                          <%= button_to "Delete", dashboard_seller_product_variant_path(product, variant),
                                       method: :delete,
-                                      data: { confirm: "Are you sure?" },
+                                      data: { turbo: false,confirm: "Are you sure?" },
                                       class: "btn btn-sm btn-outline-danger" %>
                         </td>
                       </tr>

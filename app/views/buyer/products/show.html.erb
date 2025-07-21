@@ -1,0 +1,55 @@
+<div class="container my-5">
+  <div class="row">
+    
+    <div class="col-md-6">
+      <% if @product.images.attached? %>
+        <div class="d-flex gap-2 flex-wrap">
+          <% @product.images.each do |image| %>
+            <%= image_tag url_for(image),
+                  class: "img-thumbnail",
+                  width: 120,
+                  height: 120,
+                  style: "object-fit: cover;" %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted">No images available</p>
+      <% end %>
+    </div>
+
+    <div class="col-md-6">
+      <h2><%= @product.name %></h2>
+      <p><%= @product.description %></p>
+
+      <div class="h4 mb-3">
+        <%= number_to_currency(@default_variant.price) %>
+      </div>
+
+      <%= form_with url: buyer_cart_cart_items_path, method: :post, data:{turbo:false } do |f| %>
+        <%= hidden_field_tag :product_id, @product.id %>
+
+        <% @option_types.each do |option_type| %>
+          <div class="mb-3">
+            <label><%= option_type.name.titleize %></label>
+            <select class="form-select" name="options[<%= option_type.id %>]" required>
+              <option value="">Select</option>
+              <% option_type.option_values.each do |value| %>
+                <option value="<%= value.id %>"><%= value.value %></option>
+              <% end %>
+            </select>
+          </div>
+        <% end %>
+
+        <div class="mb-3">
+          <label>Quantity</label>
+          <%= number_field_tag :quantity, 1, min: 1, class: "form-control", required: true %>
+        </div>
+
+        <div class="d-flex gap-2">
+          <%= f.submit "Add to Cart", class: "btn btn-success" %>
+          <%= button_tag "Buy Now", name: "buy_now", value: "true", type: "submit", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
