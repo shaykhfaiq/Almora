@@ -37,9 +37,9 @@ Rails.application.routes.draw do
     resources :categories, only: [:index, :show]
     resources :products, only: [:index, :show]
 
-    resource :cart, only: [:show] do
-      resources :cart_items, only: [:create, :update, :destroy,:show]
-    end
+    resource :cart, only: [:show]
+    resources :cart_items, only: []
+
 
     get "variants/find_variant", to: "variants#find_variant"
     resources :orders, only: [:index, :show, :create, :new]
