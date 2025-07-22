@@ -42,6 +42,7 @@ Rails.application.routes.draw do
 
 
     get "variants/find_variant", to: "variants#find_variant"
+    patch "orders/update_address", to: "orders#update_address"
     resources :orders, only: [:index, :show, :create, :new]
 
 
