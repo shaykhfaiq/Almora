@@ -1,9 +1,9 @@
 <div class="container my-5">
   <div class="row">
-    
+    <!-- Images -->
     <div class="col-md-6">
       <% if @product.images.attached? %>
-        <div class="d-flex gap-2 flex-wrap">
+        <div class="product-image d-flex gap-2 flex-wrap">
           <% @product.images.each do |image| %>
             <%= image_tag url_for(image),
                   class: "img-thumbnail",
@@ -17,21 +17,18 @@
       <% end %>
     </div>
 
+    <!-- Form -->
     <div class="col-md-6">
-      <h2><%= @product.name %></h2>
-      <p><%= @product.description %></p>
+      <h2 class="mb-4"><%= @product.name %></h2>
 
-      <div class="h4 mb-3">
-        <%= number_to_currency(@default_variant.price) %>
-      </div>
+      <%= form_with url: "#", method: :post, local: true, data: { turbo: false }, id: "add-to-cart-form" do |f| %>
 
-      <%= form_with url: buyer_cart_cart_items_path, method: :post, data:{turbo:false } do |f| %>
-        <%= hidden_field_tag :product_id, @product.id %>
+        <%= hidden_field_tag :product_id, @product.id, id: "product-id" %>
 
         <% @option_types.each do |option_type| %>
           <div class="mb-3">
-            <label><%= option_type.name.titleize %></label>
-            <select class="form-select" name="options[<%= option_type.id %>]" required>
+            <label class="form-label"><%= option_type.name.titleize %></label>
+            <select class="form-select option-selector" required>
               <option value="">Select</option>
               <% option_type.option_values.each do |value| %>
                 <option value="<%= value.id %>"><%= value.value %></option>
@@ -41,15 +38,100 @@
         <% end %>
 
         <div class="mb-3">
-          <label>Quantity</label>
-          <%= number_field_tag :quantity, 1, min: 1, class: "form-control", required: true %>
+          <label class="form-label">Quantity</label>
+          <%= number_field_tag :quantity, 1, min: 1, class: "form-control", required: true, id: "quantity" %>
         </div>
 
         <div class="d-flex gap-2">
-          <%= f.submit "Add to Cart", class: "btn btn-success" %>
-          <%= button_tag "Buy Now", name: "buy_now", value: "true", type: "submit", class: "btn btn-primary" %>
+          <%= submit_tag "Add to Cart", class: "btn btn-success", id: "add-to-cart-btn" %>
+          <%= button_tag "Buy Now", name: "buy_now", value: "true", type: "submit", class: "btn btn-primary", id: "buy-now-btn" %>
         </div>
       <% end %>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("add-to-cart-form");
+    const productId = document.getElementById("product-id").value;
+    const productName = document.querySelector("h2").innerText.trim();
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const quantity = parseInt(document.getElementById("quantity").value);
+      const optionSelectors = document.querySelectorAll(".option-selector");
+
+      const optionValueIds = Array.from(optionSelectors)
+        .map(sel => parseInt(sel.value))
+        .filter(Boolean);
+
+      if (optionValueIds.length !== optionSelectors.length) {
+        alert("Please select all product options.");
+        return;
+      }
+
+      try {
+        const url = `/buyer/variants/find_variant?product_id=${productId}&option_value_ids[]=${optionValueIds.join("&option_value_ids[]=")}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data.success || !data.variant) {
+          alert("Variant not found.");
+          return;
+        }
+
+        const variant = data.variant;
+
+        const variantOptions = Array.from(optionSelectors).map(select => {
+          const label = select.closest(".mb-3").querySelector("label").innerText.trim();
+          const value = select.options[select.selectedIndex].text.trim();
+          return `${label}: ${value}`;
+        });
+
+        const productImageTag = document.querySelector(".product-image img");
+        const productImageUrl = productImageTag ? productImageTag.src : null;
+
+        const cartItem = {
+          variant_id: variant.id,
+          product_id: parseInt(productId),
+          product_name: productName,
+          variant_options: variantOptions,
+          unit_price: parseFloat(variant.price),
+          quantity: quantity,
+          product_image_url: productImageUrl
+        };
+
+        let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+        const existing = cart.find(item => item.variant_id === cartItem.variant_id);
+
+        if (existing) {
+          existing.quantity += cartItem.quantity;
+        } else {
+          cart.push(cartItem);
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert("Item added to cart!");
+        updateCartBadge();
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+        alert("Something went wrong. Please try again.");
+      }
+    });
+
+    function updateCartBadge() {
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const badge = document.getElementById("cart-badge");
+      if (badge) {
+        badge.innerText = totalQuantity;
+        badge.style.display = totalQuantity > 0 ? "inline-block" : "none";
+      }
+    }
+
+    updateCartBadge();
+  });
+</script>

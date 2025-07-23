@@ -1,6 +1,5 @@
 class Cart < ApplicationRecord
-  belongs_to :user
-  has_many :cart_items, dependent: :destroy
-
-  
+  belongs_to :user 
+  def show
+  end
 end

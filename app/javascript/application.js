@@ -1,14 +1,12 @@
-import Rails from "@rails/ujs";
-Rails.start();
-
-
-import "./controllers";
 
 import $ from "jquery";
 window.$ = $;
 window.jQuery = $;
 
+// ✅ Bootstrap import (keep as-is)
+import * as bootstrap from "bootstrap";
+
+// ✅ Optional debug log
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ Rails UJS is active");
+  console.log("✅ jQuery + Bootstrap loaded (no Turbo, no UJS)");
 });
-import * as bootstrap from "bootstrap"

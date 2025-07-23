@@ -1,6 +1,6 @@
 class Product < ApplicationRecord
   belongs_to :user
-  belongs_to :category
+  belongs_to :category,  dependent: :destroy
 
   has_many_attached :images
 

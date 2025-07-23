@@ -28,7 +28,7 @@ class Dashboard::Seller::VariantsController < ApplicationController
   end
 
   def update
-  puts "Hello Update Action"
+  
   @product = Product.find(params[:product_id])
   @variant = @product.variants.find(params[:id])
 
