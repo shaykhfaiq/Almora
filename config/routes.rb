@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       end
 
       resource :seller_detail, only: [:show, :edit, :update]
+      
       resources :orders
     end
   end
@@ -44,6 +45,7 @@ Rails.application.routes.draw do
 
     get "variants/find_variant", to: "variants#find_variant"
     patch "orders/update_address", to: "orders#update_address"
+    get "orders/success", to: "orders#success", as: :orders_success
     resources :orders, only: [:index, :show, :create, :new]
 
 
