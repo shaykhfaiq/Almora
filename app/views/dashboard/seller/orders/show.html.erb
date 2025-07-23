@@ -1,0 +1,43 @@
+<h2 class="mb-4">Order <%= @order.id %> Summary</h2>
+
+<div class="mb-3">
+  <strong>Buyer:</strong> <%= @order.user.full_name %> <br>
+  <strong>Contact:</strong> <%= @order.user.contact %> <br>
+  <strong>Shipping Address:</strong> <%= @order.shipping_address %> <br>
+  <strong>Placed At:</strong> <%= @order.placed_at.strftime("%d %b %Y, %I:%M %p") %>
+</div>
+
+<hr>
+
+<h4 class="mb-3">Items You Sold in this Order:</h4>
+
+<table class="table table-bordered">
+  <thead class="table-success">
+    <tr>
+      <th>Product</th>
+      <th>Variant</th>
+      <th>Unit Price</th>
+      <th>Qty</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @seller_order_items.each do |item| %>
+      <tr>
+        <td><%= item.product_name %></td>
+        <td><%= item.variant_description %></td>
+        <td>Rs <%= item.unit_price %></td>
+        <td><%= item.quantity %></td>
+        <td>Rs <%= item.total_price %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr class="table-success">
+      <th colspan="4" class="text-end">Total (Your Items):</th>
+      <th>Rs <%= @seller_total %></th>
+    </tr>
+  </tfoot>
+</table>
+
+<%= link_to "Back to Orders", dashboard_seller_orders_path, class: "btn btn-outline-success mt-3" %>

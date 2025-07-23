@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       end
 
       resource :seller_detail, only: [:show, :edit, :update]
+      resources :orders
     end
   end
 
