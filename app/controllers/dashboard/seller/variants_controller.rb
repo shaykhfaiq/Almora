@@ -28,12 +28,16 @@ class Dashboard::Seller::VariantsController < ApplicationController
   end
 
   def update
-    if @variant.update(variant_params)
-      redirect_to dashboard_seller_product_variants_path(@product), notice: "Variant updated successfully."
-    else
-      redirect_to dashboard_seller_product_variants_path(@product), alert: "Failed to update variant."
-    end
+  puts "Hello Update Action"
+  @product = Product.find(params[:product_id])
+  @variant = @product.variants.find(params[:id])
+
+  if @variant.update(variant_params)
+    redirect_to dashboard_seller_product_variants_path(@product), notice: "Variant updated successfully."
+  else
+    redirect_to dashboard_seller_product_variants_path(@product), alert: "Failed to update variant."
   end
+end
 
   def destroy
     @variant.destroy

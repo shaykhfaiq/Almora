@@ -19,34 +19,44 @@
               </tr>
             </thead>
             <tbody>
-              <% @product.variants.each do |variant| %>
-                <tr>
-                  <td><%= variant.sku %></td>
+  <% @product.variants.each do |variant| %>
+    <%= form_with model: variant,
+                  url: dashboard_seller_product_variant_path(@product, variant),
+                  method: :patch,
+                  local: true do |f| %>
+      <tr>
+        <td><%= variant.sku %></td>
+        <td>
+          <%= f.number_field :price,
+              step: 0.01,
+              class: "form-control form-control-sm" %>
+        </td>
+        <td>
+          <%= f.number_field :stock_quantity,
+              class: "form-control form-control-sm" %>
+        </td>
+        <td>
+          <% variant.option_values.each do |value| %>
+            <span class="badge bg-success"><%= value.option_type.name %>: <%= value.value %></span>
+          <% end %>
+        </td>
+        <td class="text-center">
+          <%= f.submit "Save",
+              class: "btn btn-sm btn-outline-success me-2"
+           %>
 
-                 <%= form_with model: variant, url: dashboard_seller_product_variant_path(@product, variant), local: true do |f| %>
+          <%= button_to "Delete",
+              dashboard_seller_product_variant_path(@product, variant),
+              method: :delete,
+              data: { turbo: false, confirm: "Are you sure?" },
+              form_class: "d-inline",
+              class: "btn btn-sm btn-outline-danger" %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</tbody>
 
-                    <td>
-                      <%= f.number_field :price, value: variant.price, step: 0.01, class: "form-control form-control-sm" %>
-                    </td>
-                    <td>
-                      <%= f.number_field :stock_quantity, value: variant.stock_quantity, class: "form-control form-control-sm" %>
-                    </td>
-                    <td>
-                      <% variant.option_values.each do |value| %>
-                        <span class="badge bg-success"><%= value.option_type.name %>: <%= value.value %></span>
-                      <% end %>
-                    </td>
-                    <td class="text-center">
-                      <%= f.submit "Save", class: "btn btn-sm btn-outline-success me-2" %>
-                      <%= link_to "Delete", dashboard_seller_product_variant_path(@product, variant),
-                                  method: :delete,
-                                  data: { confirm: "Are you sure?" },
-                                  class: "btn btn-sm btn-outline-danger" %>
-                    </td>
-                  <% end %>
-                </tr>
-              <% end %>
-            </tbody>
           </table>
         </div>
       <% else %>

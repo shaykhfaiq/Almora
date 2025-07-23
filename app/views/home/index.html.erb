@@ -1,3 +1,8 @@
 <%= render 'hero' %>
 <%= render 'categories', categories: @categories %>
 <%= render 'products', products: @products %>
+<%= button_to "Logout", destroy_user_session_path,
+              method: :delete,
+              data: { confirm: "Are you sure you want to log out?" },
+              class: "btn btn-danger",
+              form: { data: { turbo: false } } %>
