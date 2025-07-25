@@ -45,11 +45,12 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    active_storage_validations (0.9.8)
-      activejob (>= 5.2.0)
-      activemodel (>= 5.2.0)
-      activestorage (>= 5.2.0)
-      activesupport (>= 5.2.0)
+    active_storage_validations (3.0.1)
+      activejob (>= 6.1.4)
+      activemodel (>= 6.1.4)
+      activestorage (>= 6.1.4)
+      activesupport (>= 6.1.4)
+      marcel (>= 1.0.3)
     activejob (7.2.2.1)
       activesupport (= 7.2.2.1)
       globalid (>= 0.3.6)
@@ -180,7 +181,6 @@ GEM
       benchmark
       logger
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (5.25.5)
     msgpack (1.8.0)
     multi_json (1.15.0)
@@ -196,12 +196,11 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.18.8)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.18.9-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.8-arm64-darwin)
+    nokogiri (1.18.9-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.8-x86_64-darwin)
+    nokogiri (1.18.9-x86_64-linux-gnu)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     parallel (1.27.0)
@@ -369,7 +368,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  active_storage_validations (~> 0.9.0)
+  active_storage_validations (~> 3.0.1)
   bootsnap
   bootstrap (~> 5.3.1)
   brakeman
