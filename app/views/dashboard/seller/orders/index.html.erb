@@ -1,0 +1,36 @@
+<h1 class="mb-4">My Orders</h1>
+
+<table class="table table-bordered table-striped table-hover">
+  <thead class="table-success">
+    <tr>
+      <th>Order ID</th>
+      <th>Buyer</th>
+      <th>Contact</th>
+      <th>Shipping Address</th>
+      <th>My Earnings (PKR)</th>
+      <th>Placed At</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @orders.each do |order| %>
+      <% seller_items = order.order_items.joins(:product).where(products: { user_id: current_user.id }) %>
+
+      <% seller_total = seller_items.sum { |item| item.variant&.price.to_i * item.quantity.to_i } %>
+
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.user.full_name %></td>
+        <td><%= order.user.contact %></td>
+        <td><%= order.shipping_address %></td>
+        <td><%= number_to_currency(seller_total, unit: "Rs ") %></td>
+        <td><%= order.placed_at.strftime("%d %b %Y") %></td>
+        <td>
+          <%= link_to "View", dashboard_seller_order_path(order), class: "btn btn-sm btn-success" %>
+        </td>
+      </tr>
+
+      
+    <% end %>
+  </tbody>
+</table>

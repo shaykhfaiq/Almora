@@ -41,6 +41,7 @@ gem "stripe", "~> 5.0"
 gem "stripe-rails", "~> 1.0"
 gem "active_storage_validations", "~> 0.9.0"
 
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 gem "byebug"

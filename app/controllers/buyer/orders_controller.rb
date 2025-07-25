@@ -2,88 +2,120 @@ class Buyer::OrdersController < ApplicationController
   before_action :authenticate_user!
 
   def new
-    @user = current_user
-
-    unless user_has_address_info?
-      flash.now[:alert] = "Please complete your address to place an order."
-      return render :complete_address_form
-    end
+   
   end
 
   def create
-    unless user_has_address_info?
-      flash[:alert] = "Missing address information."
-      return redirect_to new_buyer_order_path
+    cart_items = JSON.parse(params[:cart_json] || "[]")
+    if cart_items.empty?
+      redirect_to buyer_cart_path, alert: "Your cart is empty." and return
     end
 
-    cart = JSON.parse(params[:cart_json] || "[]")
-    if cart.empty?
-      redirect_to root_path, alert: "Cart is empty."
-      return
+    
+    if current_user.contact.blank? || current_user.address.blank? || current_user.city.blank? || current_user.country.blank?
+      redirect_to buyer_orders_update_address_path, alert: "Please complete your contact and address information first." and return
     end
 
-    sub_total = cart.sum { |item| item["unit_price"].to_i * item["quantity"].to_i }
+    
+    subtotal = cart_items.sum do |item|
+      variant = Variant.find(item["variant_id"])
+      variant.price.to_i * item["quantity"].to_i
+    end
+
     shipping_fee = 200
-    total = sub_total + shipping_fee
+    total_amount = subtotal + shipping_fee
 
     ActiveRecord::Base.transaction do
-      order = current_user.orders.create!(
-        status: "pending",
-        sub_total: sub_total,
+     
+      order = Order.create!(
+        user: current_user,
+        sub_total: subtotal,
         shipping_fee: shipping_fee,
-        total: total,
-        payment_method: "Cash on Delivery",
-        payment_status: "Pending",
-        shipping_address: full_user_address,
+        total: total_amount,
+        payment_method: params[:payment_method],
+        payment_status: params[:payment_method] == "Stripe" ? "paid" : "unpaid",
+        status: "In Processing",
+        shipping_address: current_user.address,
         placed_at: Time.current
       )
 
-      cart.each do |item|
+      
+      cart_items.each do |item|
         variant = Variant.find(item["variant_id"])
         product = variant.product
 
-        if variant.stock_quantity < item["quantity"].to_i
-          raise "Not enough stock for #{product.name} (#{variant.option_values.map(&:value).join(', ')})"
-        end
+        quantity = item["quantity"].to_i
+        unit_price = variant.price.to_i
+        total_price = unit_price * quantity
 
         OrderItem.create!(
           order: order,
           product: product,
           variant: variant,
+          quantity: quantity,
+          unit_price: unit_price,
+          total_price: total_price,
           product_name: product.name,
-          variant_description: variant.option_values.map(&:value).join(", "),
-          unit_price: item["unit_price"],
-          quantity: item["quantity"],
-          total_price: item["unit_price"].to_i * item["quantity"].to_i
+          variant_description: variant.option_values.map(&:value).join(", ")
         )
 
-        variant.update!(stock_quantity: variant.stock_quantity - item["quantity"].to_i)
+        variant.update!(stock_quantity: variant.stock_quantity - quantity)
       end
-    end
 
-    render :success
-  rescue => e
-    redirect_to new_buyer_order_path, alert: "Order failed: #{e.message}"
+    
+      if params[:payment_method] == "Stripe"
+        session = Stripe::Checkout::Session.create(
+          payment_method_types: ['card'],
+          line_items: cart_items.map do |item|
+            variant = Variant.find(item["variant_id"])
+            product = variant.product
+
+            {
+              price_data: {
+                currency: 'usd',
+                unit_amount: variant.price.to_i * 100,
+                product_data: {
+                  name: "#{product.name} (#{variant.option_values.map(&:value).join(', ')})"
+                }
+              },
+              quantity: item["quantity"].to_i
+            }
+          end,
+          mode: 'payment',
+          success_url: buyer_orders_success_url(order_id: order.id),
+          cancel_url: buyer_cart_url
+        )
+
+        redirect_to session.url, allow_other_host: true and return
+      else
+        redirect_to buyer_orders_success_path(order_id: order.id) and return
+      end
+    rescue => e
+      redirect_to buyer_cart_path, alert: "Order failed: #{e.message}"
+    end
+  end
+
+  def success
+    @order = Order.find_by(id: params[:order_id], user: current_user)
+    redirect_to root_path, alert: "Order not found." unless @order
+  end
+
+  def edit_address
+    @user = current_user
   end
 
   def update_address
-    current_user.update!(address_params)
-    redirect_to new_buyer_order_path, notice: "Address updated. You can now place your order."
+    if current_user.update(user_params)
+      redirect_to buyer_cart_path, notice: "Address updated. You can now place your order."
+    else
+      flash.now[:alert] = "Please correct the errors below."
+      render :edit_address
+    end
   end
 
   private
 
-  def user_has_address_info?
-    user = current_user
-    user.contact.present? && user.city.present? && user.country.present? && user.address.present?
-  end
-
-  def full_user_address
-    u = current_user
-    "#{u.address}, #{u.city}, #{u.country}"
-  end
-
-  def address_params
-    params.require(:user).permit(:contact, :address, :city, :country)
+  def user_params
+    params.require(:user).permit(:full_name, :contact, :address, :city, :country)
   end
 end

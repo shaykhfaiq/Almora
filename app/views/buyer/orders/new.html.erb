@@ -5,8 +5,28 @@
         <div class="card-header bg-success text-white rounded-top-4">
           <h4 class="mb-0">🧾 Review Your Order</h4>
         </div>
+
         <div class="card-body p-4">
 
+          <!-- USER DETAILS -->
+          <h5 class="mb-3 text-success">📋 Shipping Information</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Name:</strong> <%= current_user.full_name %></p>
+              <p><strong>Email:</strong> <%= current_user.email %></p>
+              <p><strong>Contact:</strong> <%= current_user.contact || 'N/A' %></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>City:</strong> <%= current_user.city || 'N/A' %></p>
+              <p><strong>Country:</strong> <%= current_user.country || 'N/A' %></p>
+              <p><strong>Address:</strong> <%= current_user.address || 'N/A' %></p>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <!-- ORDER ITEMS TABLE -->
+          <h5 class="mb-3 text-success">🛒 Order Items</h5>
           <table class="table align-middle text-center table-bordered">
             <thead class="table-light">
               <tr>
@@ -17,7 +37,9 @@
                 <th>Total</th>
               </tr>
             </thead>
-            <tbody id="cart-body"></tbody>
+            <tbody id="cart-body">
+              <tr><td colspan="5">Loading your cart...</td></tr>
+            </tbody>
           </table>
 
           <div class="text-end mt-3 mb-4">
@@ -25,9 +47,23 @@
             <h5><strong>Total:</strong> PKR <span id="grand-total" class="text-success fw-bold">0</span></h5>
           </div>
 
+          <!-- PAYMENT METHOD + FORM -->
           <%= form_with url: buyer_orders_path, method: :post, local: true, id: "checkout-form" do %>
             <%= hidden_field_tag :cart_json, "", id: "cart-json" %>
-            <%= submit_tag "Place Order", class: "btn btn-success w-100 py-2 fw-semibold shadow-sm rounded-pill" %>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold">💳 Select Payment Method</label>
+              <div class="form-check">
+                <%= radio_button_tag :payment_method, "Cash on Delivery", true, class: "form-check-input", id: "cod" %>
+                <label class="form-check-label" for="cod">Cash on Delivery</label>
+              </div>
+              <div class="form-check">
+                <%= radio_button_tag :payment_method, "Stripe", false, class: "form-check-input", id: "stripe" %>
+                <label class="form-check-label" for="stripe">Credit/Debit Card (via Stripe)</label>
+              </div>
+            </div>
+
+            <%= submit_tag "Place Order", class: "btn btn-success w-100 py-2 fw-semibold shadow-sm rounded-pill", id: "place-order-btn" %>
           <% end %>
         </div>
       </div>
@@ -35,28 +71,44 @@
   </div>
 </div>
 
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const tbody = document.getElementById("cart-body");
+    const grandTotalEl = document.getElementById("grand-total");
+    const cartJsonField = document.getElementById("cart-json");
+    const placeOrderBtn = document.getElementById("place-order-btn");
+
     let subTotal = 0;
 
-    cart.forEach(item => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${item.product_name || 'Product'}</td>
-        <td>${(item.option_values || []).join(", ")}</td>
-        <td>${item.quantity}</td>
-        <td>PKR ${item.unit_price}</td>
-        <td>PKR ${item.unit_price * item.quantity}</td>
-      `;
-      tbody.appendChild(row);
-      subTotal += item.unit_price * item.quantity;
-    });
+    if (cart.length > 0) {
+      tbody.innerHTML = "";
+      cart.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.product_name || 'Product'}</td>
+          <td>${(item.option_values || []).join(", ")}</td>
+          <td>${item.quantity}</td>
+          <td>PKR ${item.unit_price}</td>
+          <td>PKR ${item.unit_price * item.quantity}</td>
+        `;
+        tbody.appendChild(row);
+        subTotal += item.unit_price * item.quantity;
+      });
+    }
 
     const shipping = 200;
     const grandTotal = subTotal + shipping;
-    document.getElementById("grand-total").innerText = grandTotal;
-    document.getElementById("cart-json").value = JSON.stringify(cart);
+    grandTotalEl.innerText = grandTotal;
+    cartJsonField.value = JSON.stringify(cart);
+
+    
+    const radios = document.querySelectorAll("input[name='payment_method']");
+    radios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        placeOrderBtn.value = radio.value === "Stripe" ? "Proceed to Payment" : "Place Order";
+      });
+    });
   });
 </script>
