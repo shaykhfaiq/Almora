@@ -39,7 +39,7 @@ gem "elasticsearch-rails", "~> 7.0"
 gem "image_processing", "~> 1.2"
 gem "stripe", "~> 5.0"
 gem "stripe-rails", "~> 1.0"
-gem "active_storage_validations", "~> 0.9.0"
+gem "active_storage_validations", "~> 3.0.1"
 
 
 # Reduces boot times through caching; required in config/boot.rb
