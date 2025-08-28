@@ -37,7 +37,7 @@ gem "rolify"
 gem "elasticsearch-model", "~> 7.0"
 gem "elasticsearch-rails", "~> 7.0"
 gem "image_processing", "~> 1.2"
-gem "stripe", "~> 5.0"
+gem "stripe", "~> 15.5"
 gem "stripe-rails", "~> 1.0"
 gem "active_storage_validations", "~> 0.9.0"
 
